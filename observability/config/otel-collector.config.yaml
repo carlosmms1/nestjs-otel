@@ -5,30 +5,23 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
+  zipkin:
+
 processors:
   batch:
+    timeout: 10s
 
 exporters:
-  otlp:
-    endpoint: collector:4317
+  zipkin:
+    endpoint: 'http://zipkin:9411/api/v2/spans'
 
 extensions:
   health_check:
-  pprof:
-  zpages:
 
 service:
-  extensions: [health_check, pprof, zpages]
+  extensions: [health_check]
   pipelines:
     traces:
-      receivers: [otlp]
+      receivers: [zipkin, otlp]
       processors: [batch]
-      exporters: [otlp]
-    metrics:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [otlp]
-    logs:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [otlp]
+      exporters: [zipkin]
