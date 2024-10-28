@@ -12,8 +12,16 @@ processors:
     timeout: 10s
 
 exporters:
+  otlp:
+    endpoint: tempo:4317
+    tls:
+      insecure_skip_verify: true
+      insecure: true
   zipkin:
     endpoint: 'http://zipkin:9411/api/v2/spans'
+  loki:
+    endpoint: 'http://loki:3100/loki/api/v1/push'
+  debug:
 
 extensions:
   health_check:
@@ -24,4 +32,8 @@ service:
     traces:
       receivers: [zipkin, otlp]
       processors: [batch]
-      exporters: [zipkin]
+      exporters: [zipkin, otlp, debug]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [loki, debug]

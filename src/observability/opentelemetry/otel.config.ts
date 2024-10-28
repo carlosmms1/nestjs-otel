@@ -9,5 +9,14 @@ export const otelConfig = z
     OTEL_SERVICE_VERSION: z
       .string({ required_error: 'Service version is required' })
       .min(1, 'Service version is required.'),
+    OTEL_OTLP_TRACES_EXPORTER_URL: z
+      .string({ required_error: 'Traces exporter url is required' })
+      .url('Invalid traces exporter url.'),
+    OTEL_OTLP_LOGS_EXPORTER_URL: z
+      .string({ required_error: 'Logs exporter url is required' })
+      .url('Invalid logs exporter url.'),
+    OTEL_OTLP_METRICS_EXPORTER_URL: z
+      .string({ required_error: 'Metrics exporter url is required' })
+      .url('Invalid metrics exporter url.'),
   })
   .parse(process.env);
